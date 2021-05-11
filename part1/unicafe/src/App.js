@@ -25,9 +25,11 @@ const Statistics = (props) => {
 	if (isNaN(percentage)) percentage = 0 
 	if (isNaN(average)) average = 0
 
-	return (
-		<div>
-			<h1>Statistics</h1>
+	let statistics;
+	if (feedback.all < 1) {
+		statistics = <p>No feedback given</p>
+	} else {
+		statistics =
 			<table>
 				<tbody>
 					<Statistic text={'good'} value={ feedback.good } />
@@ -38,8 +40,13 @@ const Statistics = (props) => {
 					<Statistic text={'positive'} value={ percentage + '%'} />
 				</tbody>
 			</table>
+	}
+
+	return (
+		<div>
+			<h1>Statistics</h1>
+			{statistics}
 		</div>
-		
 	);
 }
 
