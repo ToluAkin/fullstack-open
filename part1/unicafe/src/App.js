@@ -45,7 +45,7 @@ const Statistics = (props) => {
 	return (
 		<div>
 			<h1>Statistics</h1>
-			{statistics}
+			{ statistics }
 		</div>
 	);
 }
@@ -59,23 +59,27 @@ const App = () => {
 		setValue(value + 1)
 	}
 
-	let sum = good + bad + neutral
+	let copyGood = good
+	let copyNeutral = neutral
+	let copyBad = bad
+
+	let sum = copyGood + copyNeutral + copyBad
 
 	const feedback = {
-		'good': good,
-		'neutral': neutral,
-		'bad': bad,
+		'good': copyGood,
+		'neutral': copyNeutral,
+		'bad': copyBad,
 		'all': sum,
-		'average': (good  -bad) / sum,
-		'positive': good/sum * 100
+		'average': (copyGood  -copyBad) / sum,
+		'positive': copyGood/sum * 100
 	}
 	
 	return (
 		<div>
 			<h1>Give Feedback</h1>
-			<Button handleClick={() => handleClicks(setGood, good)} text={'good'} />
-			<Button handleClick={() => handleClicks(setNeutral, neutral)} text={'neutral'} />
-			<Button handleClick={() => handleClicks(setBad, bad)} text={'bad'} />
+			<Button handleClick={() => handleClicks(setGood, copyGood)} text={'good'} />
+			<Button handleClick={() => handleClicks(setNeutral, copyNeutral)} text={'neutral'} />
+			<Button handleClick={() => handleClicks(setBad, copyBad)} text={'bad'} />
 			<Statistics feedback={feedback} />
 		</div>
 	);
