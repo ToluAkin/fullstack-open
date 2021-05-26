@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Person from './components/Person'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
@@ -8,11 +9,19 @@ const App = () => {
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ findName, setFindName ] = useState('')
-
+    
     let copyNewName = newName
     let copyPersons = persons
     let copyNewNumber = newNumber
     let copyFindName = findName
+
+    useEffect(() => {
+    axios.get('http://localhost:3001/persons')
+        .then(response => {
+            setPersons(response.data)
+        })
+    }, [])
+
     
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -59,6 +68,7 @@ const App = () => {
                 copyFindName={copyFindName}
                 handleFindNameChange={handleFindNameChange}
             />
+
             <h2>Phone book</h2>
             <PersonForm
                 copyNewName={copyNewName}
@@ -67,8 +77,9 @@ const App = () => {
                 handleNameChange={handleNameChange}
                 handleNumberChange={handleNumberChange}
             />
+            
             <h2>Numbers</h2>
-            <Person persons={ copyPersons } />
+            <Person persons={copyPersons} />
         </div>
     )
 }
