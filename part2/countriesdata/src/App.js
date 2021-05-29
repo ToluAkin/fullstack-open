@@ -35,7 +35,7 @@ const App = () => {
 				<p>Population { oneCountry.population }</p>
 				<h3>Languages</h3>
 				<ul>{ languages }</ul>
-			<img src={oneCountry.flag} alt={oneCountry.name} style={{ height: '200px' }}></img>
+			<img src={oneCountry.flag} alt={oneCountry.name} style={{ height: '150' }}></img>
 			</div>
 	} else if (matched.length > 0 && matched.length <= 10) {
 		matchedCountries = matched.map(item => {
