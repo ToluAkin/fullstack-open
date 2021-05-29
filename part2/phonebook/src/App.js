@@ -3,12 +3,14 @@ import personService from './services/persons'
 import Person from './components/Person'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 
 const App = () => {
     const [ persons, setPersons ] = useState([]) 
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ findName, setFindName ] = useState('')
+    const [ errorMessage, setErrorMessage ] = useState('')
     
     let copyNewName = newName
     let copyPersons = persons
@@ -32,7 +34,6 @@ const App = () => {
         let newPerson = { name: copyNewName, number: copyNewNumber }
         
         if (!checkData.length) {
-
             personService.create(newPerson)
                 .then(response => {
                     setPersons(copyPersons.concat(response))
@@ -47,9 +48,24 @@ const App = () => {
                 personService.update(personId, newPerson)
                     .then(response => {
                         setPersons(copyPersons.map(thisPerson => thisPerson.id !== personId ? thisPerson : response))
-                })
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        setErrorMessage(`Information of ${copyNewName} has already been removed from the server`)
+                        setTimeout(() => {
+                            setErrorMessage(null)
+                        }, 5000);
+                        setPersons(copyPersons.filter(person => person.id !== personId))
+                        setNewName('')
+                        setNewNumber('')
+                    })
             }
         }
+
+        setErrorMessage(`Added ${copyNewName}`)
+        setTimeout(() => {
+            setErrorMessage(null)
+        }, 5000);
     }
 
     const handleDelete = e => {
@@ -97,6 +113,7 @@ const App = () => {
             />
 
             <h2>Phone book</h2>
+            <Notification message={errorMessage} />
             <PersonForm
                 copyNewName={copyNewName}
                 copyNewNumber={copyNewNumber}
