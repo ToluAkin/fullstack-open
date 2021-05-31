@@ -2,7 +2,7 @@ import React from 'react'
 import CountryDetail from './CountryDetail'
 import Country from './Country'
 
-const SearchResult = ({ matched, handleShow }) => {
+const SearchResult = ({ matched }) => {
 	if (matched.length === 1) {
 		return (
 			<CountryDetail country={matched[0]} />
