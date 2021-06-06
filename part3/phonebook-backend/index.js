@@ -12,6 +12,9 @@ app.use(express.json())
 // setup morgan for http request logging
 app.use(morgan('dev'))
 
+// serve static html files
+app.use(express.static('build'))
+
 let persons = [
     {
       "name": "Arto Hellas",

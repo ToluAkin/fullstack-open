@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'https://fullstackopen-phone-book-api.herokuapp.com/api/persons'
+const baseUrl = 'http://localhost:3001/api/persons'
 
 // get all persons
 const getAll = () => {
