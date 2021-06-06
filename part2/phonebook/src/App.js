@@ -17,6 +17,7 @@ const App = () => {
     let copyNewNumber = newNumber
     let copyFindName = findName
 
+    // useEffect to get all the persons
     useEffect(() => {
         personService.getAll()
             .then(response => {
@@ -24,6 +25,10 @@ const App = () => {
         })
     }, [])
 
+    /**
+     * handleSubmit validates data when submission is done
+     * @param {event} e 
+     */
     const handleSubmit = e => {
         e.preventDefault()
 
@@ -68,6 +73,10 @@ const App = () => {
         }, 5000);
     }
 
+    /**
+     * Handle Delete removes a person's data
+     * @param {event} e 
+     */
     const handleDelete = e => {
         const id = e.target.getAttribute('data-id')
         // eslint-disable-next-line eqeqeq
@@ -84,14 +93,26 @@ const App = () => {
         }
     }
     
+    /**
+     * handleNameChange sets the value of the input field to the name
+     * @param {event} e 
+     */
     const handleNameChange = e => {
         setNewName(e.target.value)
     }
 
+    /**
+     * handleNumberChange sets the value of the number field to the name
+     * @param {event} e 
+     */
     const handleNumberChange = e => {
         setNewNumber(e.target.value)
     }
 
+    /**
+     * Search handles the filtering of names to be displayed
+     * @param {event} e 
+     */
     const handleFindNameChange = e => {
         let root = document.querySelectorAll('li')
         setFindName(e.target.value)
