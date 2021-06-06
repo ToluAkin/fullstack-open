@@ -12,6 +12,9 @@
     "NodeJs",
     "Express"
   ],
+  "engines": {
+    "node": "15.8.0"
+  },
   "author": "Toluwalase Akintoye",
   "license": "MIT",
   "dependencies": {
