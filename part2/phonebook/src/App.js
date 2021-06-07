@@ -114,16 +114,9 @@ const App = () => {
      * @param {event} e 
      */
     const handleFindNameChange = e => {
-        let root = document.querySelectorAll('li')
         setFindName(e.target.value)
-        root.forEach(item => {
-            let matched = item.innerHTML.toLowerCase().includes(copyFindName)
-            if (matched) {
-                item.style.display = ''
-            } else {
-                item.style.display = 'none'
-            }
-        })
+        let displayedName = persons.filter(person => person.name.toLowerCase().includes(copyFindName.toLowerCase()))
+        setPersons(displayedName)
     }
 
     return (
