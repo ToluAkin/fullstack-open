@@ -42,9 +42,14 @@ const App = () => {
             personService.create(newPerson)
                 .then(response => {
                     setPersons(copyPersons.concat(response))
+                    setErrorMessage(`Added ${copyNewName}`)
                     setNewName('')
                     setNewNumber('')
-            })
+                })
+                .catch(error => {
+                    setErrorMessage(`${error.response.data.error}`)
+                })
+            setTimeout(() => { setErrorMessage(null) }, 5000);
         } else {
             const personId = checkData[0].id
             const updateAction = window.confirm(`${copyNewName} is already in the phone book, replace the old number with a new one`)
@@ -65,11 +70,6 @@ const App = () => {
                 setNewNumber('')
             }
         }
-
-        setErrorMessage(`Added ${copyNewName}`)
-        setTimeout(() => {
-            setErrorMessage(null)
-        }, 5000);
     }
 
     /**
