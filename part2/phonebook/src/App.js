@@ -45,12 +45,11 @@ const App = () => {
                     setNewName('')
                     setNewNumber('')
             })
-            
         } else {
             const personId = checkData[0].id
             const updateAction = window.confirm(`${copyNewName} is already in the phone book, replace the old number with a new one`)
             if (updateAction) {
-                personService.update(personId, newPerson)
+                personService.create(newPerson)
                     .then(response => {
                         setPersons(copyPersons.map(thisPerson => thisPerson.id !== personId ? thisPerson : response))
                     })
@@ -61,9 +60,9 @@ const App = () => {
                             setErrorMessage(null)
                         }, 5000);
                         setPersons(copyPersons.filter(person => person.id !== personId))
-                        setNewName('')
-                        setNewNumber('')
                     })
+                setNewName('')
+                setNewNumber('')
             }
         }
 
