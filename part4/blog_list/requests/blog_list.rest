@@ -1,0 +1,12 @@
+GET http://localhost:3003/api/blogs HTTP/1.1
+
+###
+POST http://localhost:3003/api/blogs HTTP/1.1
+content-type: application/json
+
+{
+    "title": "The magic book",
+    "author": "Unknown",
+    "url": "http://www.google.com",
+    "likes": 10000
+}
