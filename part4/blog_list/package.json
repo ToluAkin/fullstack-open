@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest --verbose '-t' 'total likes'"
+    "test": "jest --verbose '-t' 'highest likes'"
   },
   "keywords": [
     "nodejs",
