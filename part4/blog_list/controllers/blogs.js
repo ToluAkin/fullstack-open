@@ -5,13 +5,15 @@ const router = express.Router()
 const Blog = require('../models/blog')
 
 router.get('/', (req, res) => {
-  Blog.find({})
+  Blog
+    .find({})
     .then(blogs => { res.json(blogs) })
 })
 
 router.post('/', (req, res) => {
   const blog = new Blog(req.body)
-  blog.save()
+  blog
+    .save()
     .then(result => { res.status(201).json(result) })
 })
 
