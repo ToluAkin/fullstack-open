@@ -20,6 +20,8 @@ test('blogs are returned as json', async () => {
 
 test('is unique identifier defined', async () => {
     const response = await api.get('/api/blogs')
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
     const resBody = response.body.map(blog => blog.id)
     expect(resBody).toBeDefined()
 })
@@ -35,9 +37,12 @@ test('sending post data', async () => {
         likes: 10000000000
     }
 
-    await api.post('/api/blogs').send(newBlog)
+    await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
     const newBlogs = await Blog.find({})
-    expect(newBlogs.length).toBe(expectedLength)
+    expect(newBlogs).toHaveLength(expectedLength)
     expect(newBlogs[existingLength].title).toBe(newBlog.title)
 })
 
@@ -49,8 +54,20 @@ test('likes property to zero', async () => {
     }
 
     newBlog.likes === undefined ? newBlog.likes = 0 : newBlog.likes
-    await api.post('/api/blogs').send(newBlog)
+    await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
     expect(newBlog.likes).toBe(0)
+})
+
+test('incomplete blog object', async () => {
+    const newBlog = {
+        author: "Chains",
+        likes: 10000000000
+    }
+    const response = await api.post('/api/blogs').send(newBlog)
+    expect(response.statusCode).toBe(400)
 })
 
 afterAll(() => {
