@@ -10,3 +10,15 @@ content-type: application/json
     "url": "http://www.google.com",
     "likes": 10000
 }
+
+###
+DELETE http://localhost:3003/api/blogs/:id HTTP/1.1
+
+###
+PUT http://localhost:3003/api/blogs/:id HTTP/1.1
+content-type: application/json
+
+{
+    "title": "The magic book in the magic castle",
+    "author": "Trendy Heels"
+}
