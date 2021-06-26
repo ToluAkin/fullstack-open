@@ -49,4 +49,12 @@ const blogs = [
     }  
 ]
 
-module.exports = { blogs }
+const dataInDb = async (Model) => {
+    const fetchedData = await Model.find({})
+    return fetchedData.map(data => data.toJSON())
+}
+module.exports = {
+    blogs,
+    dataInDb
+    // blogsInDb
+}

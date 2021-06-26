@@ -4,11 +4,11 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
-const blogs = require('../utils/blog_list_helper').blogs
+const helper = require('../utils/blog_list_helper')
 
 beforeEach(async () => {
     await Blog.deleteMany({})
-    await Blog.insertMany(blogs)
+    await Blog.insertMany(helper.blogs)
 })
 
 describe('viewing blogs saved', () => {
@@ -32,8 +32,7 @@ describe('viewing blogs saved', () => {
 
 describe('addition of blog details', () => {
     test('sending post data', async () => {
-        let allBlogs = await Blog.find({})
-        
+        const allBlogs = await helper.dataInDb(Blog)
         const newBlog = {
             title: "Twitter Days",
             author: "Jack",
@@ -46,7 +45,7 @@ describe('addition of blog details', () => {
             .expect(201)
             .expect('Content-Type', /application\/json/)
         
-        const newBlogs = await Blog.find({})
+        const newBlogs = await helper.dataInDb(Blog)
         expect(newBlogs).toHaveLength(allBlogs.length + 1)
         expect(newBlogs[allBlogs.length].title).toContain(newBlog.title)
     })
@@ -82,7 +81,7 @@ describe('addition of blog details', () => {
 
 describe('updating a specific blog', () => {
     test('deleting a blog', async () => {
-        const allBlogs = await Blog.find({})
+        const allBlogs = await helper.dataInDb(Blog)
         const newBlog = {
             title: "Breakup songs",
             author: "Taylor Swift",
@@ -98,7 +97,7 @@ describe('updating a specific blog', () => {
     })
 
     test('updating a blog', async () => {
-        const allBlogs = await Blog.find({})
+        const allBlogs = await helper.dataInDb(Blog)
         const blogToChange = allBlogs[0]
         const blogUpdate = {
             title: "Breakup songs",
