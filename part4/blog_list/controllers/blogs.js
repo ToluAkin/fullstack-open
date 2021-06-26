@@ -34,4 +34,5 @@ router.put('/:id', async (req, res) => {
     const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, { new: true })
     res.json(updatedBlog)
 })
+
 module.exports = router

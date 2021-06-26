@@ -4,7 +4,10 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
-const router = require('./controllers/blogs')
+//Controller
+const blogRouter = require('./controllers/blogs')
+const userRouter = require('./controllers/users')
+
 //Utils import
 const config = require('./utils/config')
 const logger = require('./utils/logger')
@@ -25,7 +28,8 @@ app.use(express.json())
 app.use(bodyParser.json())
 app.use(middleware.requestLogger)
 
-app.use('/api/blogs', router)
+app.use('/api/blogs', blogRouter)
+app.use('/api/users', userRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

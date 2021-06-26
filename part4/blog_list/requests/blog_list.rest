@@ -22,3 +22,16 @@ content-type: application/json
     "title": "The magic book in the magic castle",
     "author": "Trendy Heels"
 }
+
+###
+GET http://localhost:3003/api/users HTTP/1.1
+
+
+###
+POST http://localhost:3003/api/users HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Arto Hellas",
+    "username": "Hellas"
+}
