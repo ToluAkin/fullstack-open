@@ -1,3 +1,5 @@
+// import User from '../models/user'
+
 const blogs = [
     {
         _id: "5a422a851b54a676234d17f7",
@@ -49,12 +51,29 @@ const blogs = [
     }  
 ]
 
+const initialUser = {
+    name: "Robert C. Martin",
+    username: "Martin",
+    password: "architecture"
+}
+
+const defaultUser = async () => {
+    const user = new User({ initialUser })
+    bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(initialUser.password, salt, function (err, hash) {
+            user.passwordHash = hash
+        })
+    });
+    await user.save()
+}
+
 const dataInDb = async (Model) => {
     const fetchedData = await Model.find({})
     return fetchedData.map(data => data.toJSON())
 }
+
 module.exports = {
     blogs,
-    dataInDb
-    // blogsInDb
+    dataInDb,
+    // defaultUser
 }

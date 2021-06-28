@@ -5,7 +5,8 @@ mongoose.set('useCreateIndex', true)
 
 const userSchema = new mongoose.Schema({
     username: String,
-    name: String
+    name: String,
+    passwordHash: String
 })
 
 userSchema.set('toJSON', {
