@@ -3,20 +3,33 @@ const router = express.Router()
 
 //Model import
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 //get request for all blogs
 router.get('/', async(req, res) => {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user')
     res.json(blogs)
 })
 
 //post request to create a blog
-router.post('/', async(req, res) => {
-    if (!req.body.title && !req.body.url) {
+router.post('/', async (req, res) => {
+    const body = req.body
+    if (!body.title && !body.url) {
         res.status(400).end()
     } else {
-        const blog = new Blog(req.body)
+        const user = await User.findById(body.userId)
+        const blog = new Blog({
+            title: body.title,
+            url: body.url,
+            author: body.author,
+            likes: body.likes,
+            user: user._id
+        })
+
         const savedBlog = await blog.save()
+        user.blogs = user.blogs.concat(savedBlog._id)
+        await user.save()
+
         res.status(201).json(savedBlog)
     }
 })

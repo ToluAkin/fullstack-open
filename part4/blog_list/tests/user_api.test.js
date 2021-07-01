@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs')
 const User = require('../models/user')
 const helper = require('../utils/blog_list_helper')
 
+jest.setTimeout(100000)
 describe('when there is initially one user in db', () => {
     beforeEach(async () => {
         await User.deleteMany({})
@@ -25,7 +26,7 @@ describe('when there is initially one user in db', () => {
         await user.save()
   })
 
-    test('invalid username or password', async () => {
+    test('invalid users are not created', async () => {
         const usersAtStart = await helper.dataInDb(User)
 
         const newUser = {
@@ -39,6 +40,26 @@ describe('when there is initially one user in db', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/)
         expect(response.body.error).toContain('username or password is missing')
+
+        const usersAtEnd = await helper.dataInDb(User)
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+
+    test('invalid add user', async () => {
+        const usersAtStart = await helper.dataInDb(User)
+
+        const newUser = {
+            name: 'perpetual',
+            username: 'ch',
+            password: '1'
+        }
+
+        const response = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+        expect(response.body.error).toContain('username and password must be at least 3 characters long')
 
         const usersAtEnd = await helper.dataInDb(User)
         expect(usersAtEnd).toHaveLength(usersAtStart.length)

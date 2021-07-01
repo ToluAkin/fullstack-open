@@ -5,10 +5,11 @@ POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
 
 {
-    "title": "The magic book",
-    "author": "Unknown",
+    "title": "Ma test",
+    "author": "Football",
     "url": "http://www.google.com",
-    "likes": 10000
+    "likes": 0,
+    "userId": "60d79921c46324d7d6c8ff8f"
 }
 
 ###
@@ -26,12 +27,22 @@ content-type: application/json
 ###
 GET http://localhost:3003/api/users HTTP/1.1
 
-
 ###
 POST http://localhost:3003/api/users HTTP/1.1
 content-type: application/json
 
 {
-    "name": "He",
-    "username": "HR"
+    "name": "Rad Head",
+    "username": "Rad Shack",
+    "password": "shack",
+    "blogId": "60dd6f132b472092efbfece0"
+}
+
+###
+POST http://localhost:3003/api/login HTTP/1.1
+content-type: application/json
+
+{
+    "username": "Rad Shack",
+    "password": "shack"
 }

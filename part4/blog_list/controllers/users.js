@@ -2,40 +2,43 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcryptjs')
 
-const usernamePasswordVal = 3
 //Model import
 const User = require('../models/user')
+const Blog = require('../models/blog')
 
 //Get request for all users
 router.get('/', async(req, res) => {
-    const users = await User.find({})
+    const users = await User.find({}).populate('blogs')
     res.json(users)
 })
 
 //post request to add users
 router.post('/', async (req, res) => {
-    const body = req.body
+    const body = await req.body
     const reqPassword = body.password
     const reqUsername = body.username
-    if (reqPassword && reqUsername) {
-        if (reqPassword.length > usernamePasswordVal && reqUsername > usernamePasswordVal) {
-            const user = new User({
-            username: reqUsername,
-            name: body.name,
-            passwordHash: reqPassword
-        })
+    const usernamePasswordVal = 3
 
-        bcrypt.genSalt(10, function (err, salt) {
-            bcrypt.hash(reqPassword, salt, function (err, hash) {
-                user.passwordHash = hash
-            })
-        });
-        const savedUser = await user.save()
-        res.status(201).json(savedUser)
+    if (reqPassword && reqUsername) {
+        if ((reqPassword.length < usernamePasswordVal) && (reqUsername < usernamePasswordVal)) {
+            res.status(400).json({ error: 'username and password must be at least 3 characters long' }).end()
         } else {
-            res.json({ error: 'username and password must be at least 3 characters long' }).status(400).end()
-        }
-        
+            const blog = await Blog.findById(body.blogId)
+            const user = await new User({
+                username: reqUsername,
+                name: body.name,
+                passwordHash: reqPassword,
+                blogs: blog._id
+            })
+            const salt = await bcrypt.genSalt(10)
+            user.passwordHash = await bcrypt.hash(reqPassword, salt)
+
+            const savedUser = await user.save()
+            blog.user = blog.user.concat(savedUser._id)
+            await blog.save()
+
+            res.status(201).json(savedUser)
+        } 
     } else {
         res.status(400).json({ error: 'username or password is missing' }).end()
     }
