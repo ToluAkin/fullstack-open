@@ -15,14 +15,13 @@ describe('when there is initially one user in db', () => {
         const initialUser = {
             name: "Robert C. Martin",
             username: "Martin",
-            password: "architecture"
+            password: "architecture",
+            blogs: helper.blogs[0]._id
         }
         const user = new User({ initialUser })
-        bcrypt.genSalt(10, function (err, salt) {
-            bcrypt.hash(initialUser.password, salt, function (err, hash) {
-                user.passwordHash = hash
-            })
-        });
+        const salt = await bcrypt.genSalt(10)
+        user.passwordHash = await bcrypt.hash(initialUser.password, salt)
+
         await user.save()
   })
 
@@ -31,7 +30,8 @@ describe('when there is initially one user in db', () => {
 
         const newUser = {
             name: 'perpetual',
-            username: 'chris'
+            username: 'chris',
+            blogs: helper.blogs[0]._id
         }
 
         const response = await api
@@ -51,7 +51,8 @@ describe('when there is initially one user in db', () => {
         const newUser = {
             name: 'perpetual',
             username: 'ch',
-            password: '1'
+            password: '1',
+            blogs: helper.blogs[0]._id
         }
 
         const response = await api

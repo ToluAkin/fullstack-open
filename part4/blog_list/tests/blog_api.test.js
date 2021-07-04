@@ -32,22 +32,20 @@ describe('viewing blogs saved', () => {
 
 describe('addition of blog details', () => {
     test('sending post data', async () => {
-        const allBlogs = await helper.dataInDb(Blog)
         const newBlog = {
             title: "Twitter Days",
             author: "Jack",
             url: "https://twitter.com",
-            likes: 10000000000
+            likes: 10000000000,
+            blogs: helper.blogs[0]._id
         }
 
-        await api.post('/api/blogs')
+        const response = await api.post('/api/blogs')
             .send(newBlog)
-            .expect(201)
+            .set({'Authorization': 'random'}) 
+            .expect(401)
             .expect('Content-Type', /application\/json/)
-        
-        const newBlogs = await helper.dataInDb(Blog)
-        expect(newBlogs).toHaveLength(allBlogs.length + 1)
-        expect(newBlogs[allBlogs.length].title).toContain(newBlog.title)
+        expect(response.body.error).toContain('token missing or invalid')
     })
 
     test('likes property to zero', async () => {
@@ -68,13 +66,8 @@ describe('addition of blog details', () => {
     })
 
     test('incomplete blog object', async () => {
-        const newBlog = {
-            author: "Chains",
-            likes: 10000000000
-        }
-
+        const newBlog = { author: "Chains", likes: 10000000000 }
         const response = await api.post('/api/blogs').send(newBlog)
-        
         expect(response.statusCode).toBe(400)
     })
 })

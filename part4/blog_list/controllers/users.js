@@ -8,7 +8,7 @@ const Blog = require('../models/blog')
 
 //Get request for all users
 router.get('/', async(req, res) => {
-    const users = await User.find({}).populate('blogs')
+    const users = await User.find({}).populate('blogs', { author: 1, title: 1 })
     res.json(users)
 })
 

@@ -1,23 +1,28 @@
 const express = require('express')
 const router = express.Router()
+const jwt = require('jsonwebtoken')
 
 //Model import
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
+//Middleware import
+const userExtractor = require('../utils/middleware').userExtractor
+
 //get request for all blogs
 router.get('/', async(req, res) => {
-    const blogs = await Blog.find({}).populate('user')
+    const blogs = await Blog.find({}).populate('user', { author: 1, title: 1 })
     res.json(blogs)
 })
 
 //post request to create a blog
-router.post('/', async (req, res) => {
+router.post('/', userExtractor, async (req, res) => {
     const body = req.body
+
     if (!body.title && !body.url) {
         res.status(400).end()
     } else {
-        const user = await User.findById(body.userId)
+        const user = await User.findById(req.user.id)
         const blog = new Blog({
             title: body.title,
             url: body.url,
@@ -35,10 +40,16 @@ router.post('/', async (req, res) => {
 })
 
 // Remove a blog
-router.delete('/:id', async (req, res) => {
-    const id = await req.params.id
-    await Blog.findByIdAndRemove(id)
-    res.status(204).end()
+router.delete('/:id', userExtractor, async (req, res) => {
+    const user = await User.findById(req.user.id)
+    const blog = await Blog.findById(req.params.id)
+
+    if (user._id.toString() === blog.user.toString()) {
+        await Blog.findByIdAndRemove(req.params.id)
+        return res.status(204).end()
+    } else {
+        return res.status(401).json({ error: "you don't have the permission to delete this blog" })
+    }
 })
 
 // updating a blog
