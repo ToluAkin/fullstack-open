@@ -15,8 +15,7 @@ describe('when there is initially one user in db', () => {
         const initialUser = {
             name: "Robert C. Martin",
             username: "Martin",
-            password: "architecture",
-            blogs: helper.blogs[0]._id
+            password: "architecture"
         }
         const user = new User({ initialUser })
         const salt = await bcrypt.genSalt(10)
@@ -28,12 +27,7 @@ describe('when there is initially one user in db', () => {
     test('invalid users are not created', async () => {
         const usersAtStart = await helper.dataInDb(User)
 
-        const newUser = {
-            name: 'perpetual',
-            username: 'chris',
-            blogs: helper.blogs[0]._id
-        }
-
+        const newUser = { name: 'perpetual', username: 'chris' }
         const response = await api
             .post('/api/users')
             .send(newUser)
@@ -48,12 +42,7 @@ describe('when there is initially one user in db', () => {
     test('invalid add user', async () => {
         const usersAtStart = await helper.dataInDb(User)
 
-        const newUser = {
-            name: 'perpetual',
-            username: 'ch',
-            password: '1',
-            blogs: helper.blogs[0]._id
-        }
+        const newUser = { name: 'perpetual', username: 'ch', password: '1' }
 
         const response = await api
             .post('/api/users')

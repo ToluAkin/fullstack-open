@@ -3,14 +3,14 @@ GET http://localhost:3003/api/blogs HTTP/1.1
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJhZCBTaGFjayIsImlkIjoiNjBkZDZmNmFkMTk2MTk5MzYzMDk3MGZhIiwiaWF0IjoxNjI1MTc0MDM0fQ.WvUIcasf3rR5P_eyTsu1lm-KV-r9qn9CC5XyBgSrDmU
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZpc2giLCJpZCI6IjYwZTRkM2U3MDIxZjgzNjM5NDkyMWZiYiIsImlhdCI6MTYyNTYwOTk0NCwiZXhwIjoxNjI1NjEzNTQ0fQ.2U9vuAs-BkhoxA3IpG7dK_F8t_i_XKfInoqKuJtwFpA
 
 {
-    "title": "Token6 test",
-    "author": "Not a Football at all",
+    "title": "Token7 test",
+    "author": "Not a Football at all here",
     "url": "https://www.google.com",
-    "likes": 4,
-    "userId": "60dd6f6ad1961993630970fa"
+    "likes": 8,
+    "userId": "60e4d3e7021f836394921fbb"
 }
 
 ###
@@ -34,10 +34,9 @@ POST http://localhost:3003/api/users HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Rad Head",
-    "username": "Rad Shack",
-    "password": "shack",
-    "blogId": "60dd6f132b472092efbfece0"
+    "name": "Blow Fish",
+    "username": "fish",
+    "password": "123456"
 }
 
 ###
@@ -45,6 +44,6 @@ POST http://localhost:3003/api/login HTTP/1.1
 content-type: application/json
 
 {
-    "username": "Sheldor",
-    "password": "sheldon"
+    "username": "fish",
+    "password": "123456"
 }

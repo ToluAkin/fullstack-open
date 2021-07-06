@@ -5,7 +5,7 @@ mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 
 const userSchema = new mongoose.Schema({
-    username: { type: String, unique: true },
+    username: { type: String, unique: true, minLength: 3 },
     name: String,
     passwordHash: String,
     blogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }]

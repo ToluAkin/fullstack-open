@@ -8,37 +8,25 @@ const Blog = require('../models/blog')
 
 //Get request for all users
 router.get('/', async(req, res) => {
-    const users = await User.find({}).populate('blogs', { author: 1, title: 1 })
-    res.json(users)
+    const users = await User.find({}).populate('blogs', { title: 1, url: 1,  likes: 1, author: 1 })
+    res.json(users.map(user => user.toJSON()))
 })
 
 //post request to add users
 router.post('/', async (req, res) => {
-    const body = await req.body
-    const reqPassword = body.password
-    const reqUsername = body.username
+    const { password, name, username } = req.body
     const usernamePasswordVal = 3
 
-    if (reqPassword && reqUsername) {
-        if ((reqPassword.length < usernamePasswordVal) && (reqUsername < usernamePasswordVal)) {
-            res.status(400).json({ error: 'username and password must be at least 3 characters long' }).end()
-        } else {
-            const blog = await Blog.findById(body.blogId)
-            const user = await new User({
-                username: reqUsername,
-                name: body.name,
-                passwordHash: reqPassword,
-                blogs: blog._id
-            })
-            const salt = await bcrypt.genSalt(10)
-            user.passwordHash = await bcrypt.hash(reqPassword, salt)
+    if (password && username) {
+        if ((password.length < usernamePasswordVal) && (username < usernamePasswordVal)) {
+            return res.status(400).json({ error: 'username and password must be at least 3 characters long' }).end()
+        }
+        const salt = await bcrypt.genSalt(10)
+        const passwordHash = await bcrypt.hash(password, salt)
+        const user = await new User({ username, name, passwordHash })
 
-            const savedUser = await user.save()
-            blog.user = blog.user.concat(savedUser._id)
-            await blog.save()
-
-            res.status(201).json(savedUser)
-        } 
+        const savedUser = await user.save()
+        res.status(201).json(savedUser)
     } else {
         res.status(400).json({ error: 'username or password is missing' }).end()
     }
