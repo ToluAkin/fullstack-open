@@ -11,11 +11,16 @@ import loginService from './services/login'
 const App = () => {
     const [blogs, setBlogs] = useState([])
     const [user, setUser] = useState(null)
-    const [username, setUsername] = useState('') 
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [notificationMessage, setNotificationMessage] = useState(null)
 
-    useEffect(() => { blogService.getAll().then(blogs => setBlogs( blogs ))  }, [])
+    useEffect(() => {
+        blogService.getAll().then(response => {
+            setBlogs(response.data)
+            if (response.status === 500) handleLogOut()
+        })
+    }, [])
 
     useEffect(() => {
         const loggedInUser = window.localStorage.getItem('loggedUser')
@@ -26,17 +31,18 @@ const App = () => {
         }
     }, [])
 
-    const handleLogin = async(e) => {
+    const handleLogin = async e => {
         e.preventDefault()
+        const userAuth = { 'username': username.toLowerCase(), password }
         try {
-            const user = await loginService.login({ username, password})
+            const user = await loginService.login(userAuth)
             setUser(user)
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
             blogService.setToken(user.token)
             setUsername('')
             setPassword('')
         } catch (error) {
-            console.log(error);
+            console.log(error)
             setNotificationMessage('invalid username or password')
             setTimeout(() => { setNotificationMessage(null) }, 5000)
         }
@@ -47,7 +53,7 @@ const App = () => {
         window.localStorage.clear()
         setUser(null)
     }
-    
+
     if (user === null) {
         return (
             <div>
@@ -74,7 +80,7 @@ const App = () => {
                 blogs={ blogs }
             />
         )
-    } 
+    }
 }
 
 export default App

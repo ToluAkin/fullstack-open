@@ -6,7 +6,7 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('../utils/blog_list_helper')
 
-jest.setTimeout(100000)
+// jest.setTimeout(10000000)
 beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(helper.blogs)

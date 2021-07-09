@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs')
 const User = require('../models/user')
 const helper = require('../utils/blog_list_helper')
 
-jest.setTimeout(100000)
+// jest.setTimeout(10000000)
 describe('when there is initially one user in db', () => {
     beforeEach(async () => {
         await User.deleteMany({})

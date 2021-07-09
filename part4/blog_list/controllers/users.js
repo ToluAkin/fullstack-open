@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs')
 
 //Model import
 const User = require('../models/user')
-const Blog = require('../models/blog')
 
 //Get request for all users
 router.get('/', async(req, res) => {
@@ -18,12 +17,12 @@ router.post('/', async (req, res) => {
     const usernamePasswordVal = 3
 
     if (password && username) {
-        if ((password.length < usernamePasswordVal) && (username < usernamePasswordVal)) {
+        if ((password.length < usernamePasswordVal) || (username < usernamePasswordVal)) {
             return res.status(400).json({ error: 'username and password must be at least 3 characters long' }).end()
         }
         const salt = await bcrypt.genSalt(10)
         const passwordHash = await bcrypt.hash(password, salt)
-        const user = await new User({ username, name, passwordHash })
+        const user = await new User({ "username": username.toLowerCase(), name, passwordHash })
 
         const savedUser = await user.save()
         res.status(201).json(savedUser)

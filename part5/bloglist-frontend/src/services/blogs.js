@@ -4,9 +4,9 @@ const baseUrl = '/api/blogs'
 let token = null
 const setToken = newToken => token = `bearer ${newToken}`
 
-const getAll = () => {
-    const request = axios.get(baseUrl)
-    return request.then(response => response.data)
+const getAll = async () => {
+    const response = await axios.get(baseUrl)
+    return response
 }
 
 const create = async newObject => {
@@ -15,5 +15,16 @@ const create = async newObject => {
     return response.data
 }
 
-const query = { getAll, create, setToken }
+const update = async (newObject, userId) => {
+    const response = await axios.put(`${ baseUrl }/${ userId }`, newObject)
+    return response.data
+}
+
+const remove = async blogId => {
+    const config = { headers: { Authorization: token } }
+    const request = await axios.delete(`${ baseUrl }/${ blogId }`, config)
+    return request.data
+}
+
+const query = { getAll, create, setToken, update, remove }
 export default query

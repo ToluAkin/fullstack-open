@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import PropTypes from 'prop-types'
 
 //components
 import Blog from './Blog'
@@ -16,7 +17,7 @@ const AddBlog = ({ user, handleLogOut, blogs }) => {
 
     const blogFormRef = useRef()
 
-    const handleCreate = async (e) => {
+    const handleCreate = async e => {
         e.preventDefault()
         await blogService.create({ title, author, url })
         setNotificationMessage(`a new blog ${title} by ${author} added`)
@@ -29,8 +30,8 @@ const AddBlog = ({ user, handleLogOut, blogs }) => {
             <h2>blogs</h2>
             <Notification message={ notificationMessage } />
             <p>{ user.username } logged in</p>
-            <button type="submit" onClick={handleLogOut}>logout</button>
-            
+            <button type="submit" onClick={ handleLogOut }>logout</button>
+            <p />
             <Togglable buttonLabel="create new blog" ref={ blogFormRef } >
                 <h1>Create a new blog</h1>
                 <form onSubmit={ handleCreate }>
@@ -49,10 +50,14 @@ const AddBlog = ({ user, handleLogOut, blogs }) => {
                     <button type="submit">Create</button>
                 </form>
             </Togglable>
-            
-            { blogs.map(blog => <Blog key={ blog.id } blog={ blog } />) }
+            { blogs.sort((a,b) => b.likes - a.likes).map(blog => <Blog key={ blog.id } blog={ blog } user={ user } />) }
         </div>
     )
 }
 
+AddBlog.propTypes = {
+    user: PropTypes.object.isRequired,
+    handleLogOut: PropTypes.func.isRequired,
+    blogs: PropTypes.array.isRequired
+}
 export default AddBlog
