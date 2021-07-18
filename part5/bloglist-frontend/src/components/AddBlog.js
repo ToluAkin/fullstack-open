@@ -24,7 +24,6 @@ const AddBlog = ({ user, handleLogOut, blogs }) => {
         blogFormRef.current.toggleVisibility()
     }
 
-
     return (
         <div>
             <h2>blogs</h2>

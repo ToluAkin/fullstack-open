@@ -8,7 +8,7 @@ const Blog = ({ blog, user }) => {
     const handleAddingLikes = async () => {
         const updatedContent = {
             'user': blog.user.id,
-            'likes': blog.likes+=1,
+            'likes': blog.likes+1,
             'author': blog.author,
             'title': blog.title,
             'url': blog.url
@@ -23,23 +23,26 @@ const Blog = ({ blog, user }) => {
     }
 
     const bgBlue = { backgroundColor: 'blue', color: 'white' }
-    const buttonDelete = <button style={ bgBlue } onClick={ handleDelete }>remove</button>
-
     const blogStyle = { paddingTop: 10, paddingLeft: 2, border: 'solid', borderWidth: 1, marginBottom: 5 }
-    const blogDetail = <div>
-        <p>{ blog.url }</p>
-        <p>likes { blog.likes } <button onClick={ handleAddingLikes }>like</button></p>
-        <p>{ blog.user.name }</p>
-        { user && user.username === blog.user.username ? buttonDelete : '' }
-    </div>
 
     return (
         <div style={ blogStyle }>
-            <p>
-                { blog.title } { blog.author }
-                <button onClick={ handleClick }>{ toggle ? 'hide' : 'view' }</button>
-            </p>
-            { toggle ? blogDetail : '' }
+            <p>{ blog.title } { blog.author } </p>
+            <button onClick={ handleClick }>{ toggle ? 'hide' : 'view' }</button>
+            {
+                toggle
+                    ?<div className="d-none">
+                        <p>{ blog.url }</p>
+                        <p>likes { blog.likes } <button onClick={ handleAddingLikes }>like</button></p>
+                        <p>{ blog.user.name }</p>
+                        {
+                            user && user.username === blog.user.username
+                                ? <button type="button" role="button" style={ bgBlue } onClick={ handleDelete }>remove</button>
+                                : ''
+                        }
+                    </div>
+                    : ''
+            }
         </div>
     )
 }
