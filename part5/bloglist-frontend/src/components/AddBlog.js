@@ -1,62 +1,28 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-//components
-import Blog from './Blog'
-import Notification from './Notification'
-import Togglable from './Togglable'
-
-//services
-import blogService from '../services/blogs'
-
-const AddBlog = ({ user, handleLogOut, blogs }) => {
+const AddBlog = ({ handleCreate }) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
-    const [notificationMessage, setNotificationMessage] = useState(null)
 
-    const blogFormRef = useRef()
-
-    const handleCreate = async e => {
-        e.preventDefault()
-        await blogService.create({ title, author, url })
-        setNotificationMessage(`a new blog ${title} by ${author} added`)
-        blogFormRef.current.toggleVisibility()
-    }
+    const submit = (e) => handleCreate(e, { title, author, url })
 
     return (
         <div>
-            <h2>blogs</h2>
-            <Notification message={ notificationMessage } />
-            <p>{ user.username } logged in</p>
-            <button type="submit" onClick={ handleLogOut }>logout</button>
-            <p />
-            <Togglable buttonLabel="create new blog" ref={ blogFormRef } >
-                <h1>Create a new blog</h1>
-                <form onSubmit={ handleCreate }>
-                    <div>
-                        title:
-                        <input name="title" type="text" value={ title } onChange={({ target }) => setTitle(target.value)} />
-                    </div>
-                    <div>
-                        author:
-                        <input name="author" type="text" value={ author } onChange={({ target }) => setAuthor(target.value)} />
-                    </div>
-                    <div>
-                        url:
-                        <input name="url" type="text" value={ url } onChange={({ target }) => setUrl(target.value)} />
-                    </div>
-                    <button type="submit">Create</button>
-                </form>
-            </Togglable>
-            { blogs.sort((a,b) => b.likes - a.likes).map(blog => <Blog key={ blog.id } blog={ blog } user={ user } />) }
+            <h1>Create a new blog</h1>
+            <form onSubmit={ submit }>
+                <label htmlFor="title">title:</label>
+                <input name="title" id="title" type="text" value={ title } onChange={({ target }) => setTitle(target.value)} />
+                <label htmlFor="author">author:</label>
+                <input name="author" id="author" type="text" value={author} onChange={({ target }) => setAuthor(target.value)} />
+                <label htmlFor="url">url:</label>
+                <input name="url" id="url" type="text" value={ url } onChange={({ target }) => setUrl(target.value)} />
+                <button type="submit">Create</button>
+            </form>
         </div>
     )
 }
 
-AddBlog.propTypes = {
-    user: PropTypes.object.isRequired,
-    handleLogOut: PropTypes.func.isRequired,
-    blogs: PropTypes.array.isRequired
-}
+AddBlog.propTypes = { handleCreate: PropTypes.func.isRequired }
 export default AddBlog
