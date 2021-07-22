@@ -1,25 +1,29 @@
 import React, { useState } from 'react'
+
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, handleDelete }) => {
     const [toggle, setToggle] = useState(false)
+    const [like, setLike] = useState(blog.likes)
 
     const handleClick = () => { setToggle(!toggle) }
-    const handleAddingLikes = async () => {
+
+    const addLike = async () => {
+        setLike(blog.likes+=1)
         const updatedContent = {
             'user': blog.user.id,
-            'likes': blog.likes+1,
+            'likes': blog.likes,
             'author': blog.author,
             'title': blog.title,
             'url': blog.url
         }
         await blogService.update(updatedContent, blog.id)
     }
-    const handleDelete = async () => {
-        const deleteAction = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
-        if (deleteAction) {
-            await blogService.remove(blog.id)
-        }
+
+    const removeBlog = async () => {
+        window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
+        await blogService.remove(blog.id)
+        handleDelete(blog)
     }
 
     const bgBlue = { backgroundColor: 'blue', color: 'white' }
@@ -28,16 +32,16 @@ const Blog = ({ blog, user }) => {
     return (
         <div style={ blogStyle }>
             <p>{ blog.title } { blog.author } </p>
-            <button onClick={ handleClick }>{ toggle ? 'hide' : 'view' }</button>
+            <button id="viewDetail" onClick={ handleClick }>{ toggle ? 'hide' : 'view' }</button>
             {
                 toggle
-                    ?<div className="d-none">
+                    ? <div className="d-none">
                         <p>{ blog.url }</p>
-                        <p>likes { blog.likes } <button onClick={ handleAddingLikes }>like</button></p>
+                        <p>likes { like } <button id="addLike" onClick={ addLike }>like</button></p>
                         <p>{ blog.user.name }</p>
                         {
-                            user && user.username === blog.user.username
-                                ? <button type="button" role="button" style={ bgBlue } onClick={ handleDelete }>remove</button>
+                            user.username === blog.user.username
+                                ? <button id="deleteBlog" type="button" role="button" style={ bgBlue } onClick={ removeBlog }>remove</button>
                                 : ''
                         }
                     </div>

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 //components
 import AddBlog from './components/AddBlog'
 import Notification from './components/Notification'
-import Blog from './components/Blog'
+import BlogList from './components/BlogList'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 
@@ -18,7 +18,7 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [notificationMessage, setNotificationMessage] = useState(null)
 
-    useEffect(() => { blogService.getAll().then(blogsArray => setBlogs(blogsArray)) }, [])
+    useEffect(() => { blogService.getAll().then(blogsArray => setBlogs(blogsArray.sort((a, b) => b.likes - a.likes))) }, [])
     useEffect(() => {
         const loggedInUser = window.localStorage.getItem('loggedUser')
         if (loggedInUser) {
@@ -40,7 +40,7 @@ const App = () => {
             setPassword('')
         } catch (error) {
             console.log(error)
-            setNotificationMessage('invalid username or password')
+            setNotificationMessage('wrong username or password')
             setTimeout(() => { setNotificationMessage(null) }, 5000)
         }
     }
@@ -56,15 +56,17 @@ const App = () => {
         e.preventDefault()
         try {
             blogFormRef.current.toggleVisibility()
-            await blogService.create(newObject)
-            const updatedBlogs = await blogService.getAll()
-            setBlogs(updatedBlogs)
+            const newBlog = await blogService.create(newObject)
+            setBlogs(blogs.concat(newBlog))
             setNotificationMessage(`a new blog ${ newObject.title } by ${ newObject.author } added`)
             setTimeout(() => { setNotificationMessage(null) }, 5000)
         } catch (error) {
             console.log(error)
-            setNotificationMessage(error)
         }
+    }
+
+    const handleDelete = blog => {
+        setBlogs(blogs.filter(theBlog => theBlog.id !== blog.id))
     }
 
     if (user === null) {
@@ -83,13 +85,13 @@ const App = () => {
             <section>
                 <h2>blogs</h2>
                 <Notification message={ notificationMessage } />
-                <p>{ user.username } logged in</p>
+                <p>{ user.name } logged in</p>
                 <button type="submit" onClick={ handleLogOut }>logout</button>
                 <p />
                 <Togglable buttonLabel="create new blog" ref={ blogFormRef } >
                     <AddBlog handleCreate={ handleCreate } />
                 </Togglable>
-                { blogs.sort((a, b) => b.likes - a.likes).map(blog => <Blog key={ blog.id } blog={ blog } user={ user } />)}
+                <BlogList blogs={ blogs } user={ user } handleDelete={ handleDelete } />
             </section>
         )
     }

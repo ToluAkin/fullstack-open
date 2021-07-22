@@ -42,7 +42,7 @@ const App = () => {
             personService.create(newPerson)
                 .then(response => {
                     setPersons(copyPersons.concat(response))
-                    setErrorMessage(`Added ${copyNewName}`)
+                    setErrorMessage(`Added ${ copyNewName }`)
                     setNewName('')
                     setNewNumber('')
                 })
@@ -96,17 +96,13 @@ const App = () => {
      * handleNameChange sets the value of the input field to the name
      * @param {event} e 
      */
-    const handleNameChange = e => {
-        setNewName(e.target.value)
-    }
+    const handleNameChange = e => setNewName(e.target.value)
 
     /**
      * handleNumberChange sets the value of the number field to the name
      * @param {event} e 
      */
-    const handleNumberChange = e => {
-        setNewNumber(e.target.value)
-    }
+    const handleNumberChange = e => setNewNumber(e.target.value)
 
     /**
      * Search handles the filtering of names to be displayed
@@ -121,22 +117,22 @@ const App = () => {
     return (
         <div>
             <Filter
-                copyFindName={copyFindName}
-                handleFindNameChange={handleFindNameChange}
+                copyFindName={ copyFindName }
+                handleFindNameChange={ handleFindNameChange }
             />
 
             <h2>Phone book</h2>
-            <Notification message={errorMessage} />
+            <Notification message={ errorMessage } />
             <PersonForm
-                copyNewName={copyNewName}
-                copyNewNumber={copyNewNumber}
-                handleSubmit={handleSubmit}
-                handleNameChange={handleNameChange}
-                handleNumberChange={handleNumberChange}
+                copyNewName={ copyNewName }
+                copyNewNumber={ copyNewNumber }
+                handleSubmit={ handleSubmit }
+                handleNameChange={ handleNameChange }
+                handleNumberChange={ handleNumberChange }
             />
             
             <h2>Numbers</h2>
-            <Person persons={copyPersons} handleDelete={handleDelete} />
+            <Person persons={ copyPersons } handleDelete={ handleDelete } />
         </div>
     )
 }

@@ -6,7 +6,12 @@ const AddBlog = ({ handleCreate }) => {
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
 
-    const submit = (e) => handleCreate(e, { title, author, url })
+    const submit = async e => {
+        await handleCreate(e, { title, author, url })
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+    }
 
     return (
         <div>
@@ -18,7 +23,7 @@ const AddBlog = ({ handleCreate }) => {
                 <input name="author" id="author" type="text" value={author} onChange={({ target }) => setAuthor(target.value)} />
                 <label htmlFor="url">url:</label>
                 <input name="url" id="url" type="text" value={ url } onChange={({ target }) => setUrl(target.value)} />
-                <button type="submit">Create</button>
+                <button id="create" type="submit">Create</button>
             </form>
         </div>
     )

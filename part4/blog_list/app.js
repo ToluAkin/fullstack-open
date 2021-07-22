@@ -4,7 +4,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
-//Controller
+//Controllers
 const blogRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
@@ -33,6 +33,11 @@ app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
+
+if (process.env.NODE_ENV === 'test') {
+    const testingRouter = require('./controllers/reset')
+    app.use('/api/reset', testingRouter)
+}
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
