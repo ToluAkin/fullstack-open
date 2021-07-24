@@ -1,3 +1,6 @@
+const { _, $ } = Cypress
+const userPass = 'medium'
+
 Cypress.Commands.add('login', ({ username, password }) => {
     cy.request('POST', 'http://localhost:3003/api/login', { username, password })
         .then(({ body }) => {
@@ -6,11 +9,11 @@ Cypress.Commands.add('login', ({ username, password }) => {
   })
 })
 
-Cypress.Commands.add('create', ({ title, author, url }) => {
+Cypress.Commands.add('create', (blog) => {
     cy.request({
         url: 'http://localhost:3003/api/blogs',
         method: 'POST',
-        body: { title, author, url },
+        body: { ...blog },
         headers: {
             'Authorization': `bearer ${ JSON.parse(localStorage.getItem('loggedUser')).token }`
         }
@@ -36,15 +39,15 @@ describe('Blog app', function () {
 
     describe('Login', function () {
         it('succeeds with correct credentials', function () {
-            cy.get('#username').type('medium')
-            cy.get('#pswd').type('medium')
+            cy.get('#username').type(userPass)
+            cy.get('#pswd').type(userPass)
             cy.get('#loginButton').click()
 
             cy.contains('Medium logged in')
         })
 
         it('fails with wrong credentials', function () {
-            cy.get('#username').type('medium')
+            cy.get('#username').type(userPass)
             cy.get('#pswd').type('media')
             cy.get('#loginButton').click()
 
@@ -56,7 +59,7 @@ describe('Blog app', function () {
 
     describe('When logged in', function () {
         beforeEach(function () {
-            cy.login({ username:'medium', password:'medium' })
+            cy.login({ username: userPass, password:userPass })
         })
 
         it('A blog can be created', function () {
@@ -75,7 +78,7 @@ describe('Blog app', function () {
 
     describe('Creating a blog', function () {
         beforeEach(function () {
-            cy.login({ username: 'medium', password: 'medium' })
+            cy.login({ username: userPass, password: userPass })
             cy.create({ title: 'new note 1', author: 'i am', url: 'https://googlefirst.com' })
         })
 
@@ -94,6 +97,33 @@ describe('Blog app', function () {
             cy.contains('likes 0')
             cy.get('#addLike').click()
             cy.contains('likes 1')
+        })
+    })
+
+    describe('Order blogs by likes', function () {
+        beforeEach(function () {
+            cy.login({ username: 'medium', password: 'medium' })
+            cy.create({ title: 'new note 1', author: 'i am', url: 'https://googlefirst.com', likes: 2 })
+            cy.create({ title: 'new note 2', author: 'i am me', url: 'https://googlesecond.com', likes: 3 })
+            cy.create({ title: 'new note 3', author: 'i am me of me', url: 'https://googlethird.com', likes: 14 })
+        })
+
+        it('order by most likes', function () {
+            cy.get('article')
+                .find('#viewDetail')
+                .click({ multiple: true })
+                .get('article')
+                .find('#likes')
+                .then(($allBlogs) => {
+                expect($allBlogs).to.have.length(3)
+
+                    let figures = []
+                    for (let i = 0; i < $allBlogs.length; i++) {
+                        figures.push($allBlogs[i].textContent.substring(6))
+                    }
+                    const sortedLikes = figures.sort()
+                    expect(figures).to.eq(sortedLikes)
+            })
         })
     })
 })

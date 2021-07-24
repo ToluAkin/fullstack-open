@@ -30,14 +30,17 @@ const Blog = ({ blog, user, handleDelete }) => {
     const blogStyle = { paddingTop: 10, paddingLeft: 2, border: 'solid', borderWidth: 1, marginBottom: 5 }
 
     return (
-        <div style={ blogStyle }>
+        <article id="blog" style={ blogStyle }>
             <p>{ blog.title } { blog.author } </p>
             <button id="viewDetail" onClick={ handleClick }>{ toggle ? 'hide' : 'view' }</button>
             {
                 toggle
                     ? <div className="d-none">
                         <p>{ blog.url }</p>
-                        <p>likes { like } <button id="addLike" onClick={ addLike }>like</button></p>
+                        <div>
+                            <p id="likes">likes { like }</p>
+                            <button id="addLike" onClick={ addLike }>like</button>
+                        </div>
                         <p>{ blog.user.name }</p>
                         {
                             user.username === blog.user.username
@@ -47,7 +50,7 @@ const Blog = ({ blog, user, handleDelete }) => {
                     </div>
                     : ''
             }
-        </div>
+        </article>
     )
 }
 

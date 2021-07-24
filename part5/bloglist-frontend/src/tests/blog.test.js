@@ -13,7 +13,7 @@ describe('blog actions', () => {
     beforeEach(() => {
         const blog = BlogHelper.defaultBlog
         component = render(<Blog blog={ blog } user={ blog.user }
-            handleAddingLikes={ mockHandler } />)
+            handleDelete={ mockHandler } />)
     })
 
     test('blog initial display', () => {
@@ -37,7 +37,7 @@ describe('blog actions', () => {
         const viewButton = component.getByText('view')
         userEvent.click(viewButton)
 
-        const likeButton = component.getByText('like')
+        const likeButton = component.container.querySelector('#addLike')
         userEvent.dblClick(likeButton)
 
         expect(mockHandler).toHaveBeenCalledTimes(2)
