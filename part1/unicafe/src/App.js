@@ -70,17 +70,17 @@ const App = () => {
 		'neutral': copyNeutral,
 		'bad': copyBad,
 		'all': sum,
-		'average': (copyGood  -copyBad) / sum,
+		'average': (copyGood - copyBad) / sum,
 		'positive': copyGood/sum * 100
 	}
 	
 	return (
 		<div>
 			<h1>Give Feedback</h1>
-			<Button handleClick={() => handleClicks(setGood, copyGood)} text={'good'} />
-			<Button handleClick={() => handleClicks(setNeutral, copyNeutral)} text={'neutral'} />
-			<Button handleClick={() => handleClicks(setBad, copyBad)} text={'bad'} />
-			<Statistics feedback={feedback} />
+			<Button handleClick={() => handleClicks(setGood, copyGood)} text={ 'good' } />
+			<Button handleClick={() => handleClicks(setNeutral, copyNeutral)} text={ 'neutral' } />
+			<Button handleClick={() => handleClicks(setBad, copyBad)} text={ 'bad' } />
+			<Statistics feedback={ feedback } />
 		</div>
 	);
 }
