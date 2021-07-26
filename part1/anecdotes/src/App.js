@@ -36,8 +36,8 @@ const App = () => {
         handleMostVotes =
         <div>
             <h1>Anecdotes with most votes</h1>
-            <p>{anecdotes[maxValue]}</p>
-            <p> has {max} votes</p>
+            <p>{ anecdotes[maxValue] }</p>
+            <p> has { max } votes</p>
         </div>
     }
 
@@ -47,7 +47,7 @@ const App = () => {
             <p>has { voteArray[selected] } votes</p>
             <button onClick={ handleVote }>Vote</button>
             <button onClick={ handleNextValue }>Next Anecdote</button>
-            {handleMostVotes}
+            { handleMostVotes }
         </div>
     )
 }
