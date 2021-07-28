@@ -74,9 +74,9 @@ const App = () => {
             <LoginForm
                 notificationMessage={ notificationMessage }
                 handleLogin={ handleLogin }
-                handleNameChange={({ target }) => setUsername(target.value)}
+                handleNameChange={ ({ target }) => setUsername(target.value) }
                 username={ username }
-                handlePasswordChange={({ target }) => setPassword(target.value)}
+                handlePasswordChange={ ({ target }) => setPassword(target.value) }
                 password={ password }
             />
         )

@@ -1,4 +1,3 @@
-
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -10,21 +9,17 @@ const anecdotesAtStart = [
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
-const asObject = (anecdote) => {
-    return {
-        content: anecdote,
-        id: getId(),
-        votes: 0
-    }
+const asObject = anecdote => {
+    return { content: anecdote, id: getId(), votes: 0 }
 }
 
 const initialState = anecdotesAtStart.map(asObject)
 
-export const createAnecdote = (content) => {
+export const createAnecdote = content => {
     return { type: 'CREATE', data: content }
 }
 
-export const voteAnecdote = (id) => {
+export const voteAnecdote = id => {
     return { type: 'VOTE', data: id }
 }
 
