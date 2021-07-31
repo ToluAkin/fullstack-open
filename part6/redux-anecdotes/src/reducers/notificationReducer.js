@@ -1,25 +1,18 @@
 const initialState = ''
 
-export const voteNotify = anecdote => {
-    return { type: 'SET_NOTIFY', payload: anecdote.content }
-}
-
-export const removeNotify = () => {
-    return { type: 'REMOVE_NOTIFY' }
-}
-
-export const addNotify = anecdote => {
-    return { type: 'ADD_NOTIFY', payload: anecdote }
+export const setNotification = (content, duration) => {
+    return async dispatch => {
+        dispatch({ type: 'SET_NOTIFY', payload: content })
+        setTimeout(() => dispatch({ type: 'REMOVE_NOTIFY' }), duration)
+    }
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SET_NOTIFY':
-            return 'You voted for ' + action.payload
+            return action.payload
         case 'REMOVE_NOTIFY':
             return initialState
-        case 'ADD_NOTIFY':
-            return 'You added ' + action.payload
         default: return state
     }
 }

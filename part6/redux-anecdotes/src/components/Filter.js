@@ -9,6 +9,7 @@ const Filter = () => {
         const filter = e.target.value
         e.target.value = ''
         dispatch(anecdoteFilter(filter))
+        return filter
     }
         
     const style = { marginBottom: 10 }
