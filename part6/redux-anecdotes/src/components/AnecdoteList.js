@@ -8,7 +8,7 @@ const AnecdoteList = () => {
         if (state.filter === 'ALL') {
             return state.anecdotes
         } else {
-            return state.anecdotes.filter(anecdote => anecdote.content.includes(state.filter))
+            return state.anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(state.filter))
         }
     })
 
