@@ -1,15 +1,13 @@
 import React, { useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { anecdoteFilter } from '../reducers/filterReducer'
 
-const Filter = () => {
-    const dispatch = useDispatch()
-
+const Filter = props => {
     const textInput = useRef()
 
     const handleChange = () => {
         const filter = textInput.current.value.toLowerCase()
-        dispatch(anecdoteFilter(filter))
+        props.anecdoteFilter(filter)
     }
         
     const style = { marginBottom: 10 }
@@ -22,4 +20,6 @@ const Filter = () => {
     )
 }
 
-export default Filter
+const ConnectedFilter = connect(null, { anecdoteFilter })(Filter)
+
+export default ConnectedFilter

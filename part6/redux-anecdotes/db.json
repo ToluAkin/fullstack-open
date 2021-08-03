@@ -3,7 +3,7 @@
     {
       "content": "If it hurts, do it more often",
       "id": "47145",
-      "votes": 13
+      "votes": 14
     },
     {
       "content": "Adding manpower to a late software project makes it later!",
@@ -34,6 +34,21 @@
       "content": "more please",
       "votes": 1,
       "id": "FsZMmk8"
+    },
+    {
+      "content": "not smart enough to debug it.",
+      "votes": 0,
+      "id": "OeqN9VT"
+    },
+    {
+      "content": "smart enough to debug it.",
+      "votes": 0,
+      "id": "ESLObfj"
+    },
+    {
+      "content": "smart and good enough to debug it.",
+      "votes": 0,
+      "id": "ibLnrk8"
     }
   ]
 }
