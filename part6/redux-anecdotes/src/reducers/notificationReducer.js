@@ -1,9 +1,15 @@
 const initialState = ''
-
+const holdTime = []
 export const setNotification = (content, duration) => {
     return async dispatch => {
         dispatch({ type: 'SET_NOTIFY', payload: content })
-        setTimeout(() => dispatch({ type: 'REMOVE_NOTIFY' }), duration)
+        const timer = setTimeout(() => dispatch({ type: 'REMOVE_NOTIFY' }), duration)
+        holdTime.push(timer)
+        if (holdTime.length > 1) {
+            for (let i = 0; i < holdTime.length - 1; i++) {
+                clearTimeout(holdTime[i])
+            }
+        }
     }
 }
 
