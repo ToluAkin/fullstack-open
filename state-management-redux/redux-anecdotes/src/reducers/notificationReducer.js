@@ -1,5 +1,5 @@
 const initialState = ''
-const holdTime = []
+let holdTime = []
 export const setNotification = (content, duration) => {
     return async dispatch => {
         dispatch({ type: 'SET_NOTIFY', payload: content })
@@ -9,6 +9,7 @@ export const setNotification = (content, duration) => {
             for (let i = 0; i < holdTime.length - 1; i++) {
                 clearTimeout(holdTime[i])
             }
+            setTimeout(() => holdTime = [], duration)
         }
     }
 }
