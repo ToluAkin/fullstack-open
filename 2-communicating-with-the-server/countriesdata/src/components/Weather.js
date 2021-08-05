@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import axios from '../../../../6-state-management-redux/redux-anecdotes/node_modules/axios'
 
 const Weather = ({ country }) => {
     const [ weather, setWeather ] = useState('')
