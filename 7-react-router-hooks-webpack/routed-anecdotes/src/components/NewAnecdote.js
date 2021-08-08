@@ -1,15 +1,24 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useField } from '../hooks'
 
 const CreateNew = ({ addNew }) => {
-    const [content, setContent] = useState('')
-    const [author, setAuthor] = useState('')
-    const [info, setInfo] = useState('')
     const history = useHistory()
+    // const text = 'text'
+    const content = useField()
+    const author = useField()
+    const info = useField()
+    const reset = useField('reset')
     
     const handleSubmit = e => {
         e.preventDefault()
-        addNew({ content, author, info, votes: 0 })
+        const newContent = {
+            content: content.value,
+            author: author.value,
+            info: info.value,
+            votes: 0
+        }
+        addNew({ ...newContent })
         history.push('/')
     }
 
@@ -19,18 +28,21 @@ const CreateNew = ({ addNew }) => {
             <form onSubmit={ handleSubmit }>
                 <p>
                     <label htmlFor="content">content</label><br />
-                    <input name='content' value={content} onChange={ e => setContent(e.target.value) } />
+                    <input name='content' { ...content } />
                 </p>
                 <p>
                     <label htmlFor="author">author</label><br />
-                    <input name='author' value={author} onChange={ e => setAuthor(e.target.value) } />
+                    <input name='author' { ...author } />
                 </p>
                 <p>
                     <label>url for more info</label><br />
-                    <input name='info' value={info} onChange={ e => setInfo(e.target.value) } />
+                    <input name='info' { ...info } />
                 </p>
                     
-                <div><button type="submit">create</button></div>
+                {/* <div>
+                    <button type="submit">Create</button> */}
+                    <input { ...reset } value="Reset" />
+                {/* </div> */}
             </form>
         </div>
     )

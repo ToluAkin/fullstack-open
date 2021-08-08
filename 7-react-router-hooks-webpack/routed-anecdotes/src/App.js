@@ -34,9 +34,9 @@ const App = () => {
         setTimeout(() => setNotification(''), 10 * 1000)
     }
 
-    const anecdoteById = (id) => anecdotes.find(a => a.id === id)
+    const anecdoteById = id => anecdotes.find(a => a.id === id)
 
-    const vote = (id) => {
+    const vote = id => {
         const anecdote = anecdoteById(id)
         const voted = { ...anecdote, votes: anecdote.votes + 1 }
         setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
@@ -63,7 +63,6 @@ const App = () => {
                 </div>
             </Switch>
         </BrowserRouter>
-        
     )
 }
 
