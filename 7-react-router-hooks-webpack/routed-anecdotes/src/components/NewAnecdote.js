@@ -1,4 +1,3 @@
-// import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useField } from '../hooks'
 
@@ -8,7 +7,6 @@ const CreateNew = ({ addNew }) => {
     const content = useField()
     const author = useField()
     const info = useField()
-    const reset = useField('reset')
     
     const handleSubmit = e => {
         e.preventDefault()
@@ -20,6 +18,12 @@ const CreateNew = ({ addNew }) => {
         }
         addNew({ ...newContent })
         history.push('/')
+    }
+
+    const handleReset = () => { 
+        content.onReset()
+        author.onReset()
+        info.onReset()
     }
 
     return (
@@ -39,10 +43,10 @@ const CreateNew = ({ addNew }) => {
                     <input name='info' { ...info } />
                 </p>
                     
-                {/* <div>
-                    <button type="submit">Create</button> */}
-                    <input { ...reset } value="Reset" />
-                {/* </div> */}
+                <div>
+                    <button type="submit">Create</button>
+                    <input type="reset" onClick={ handleReset } />
+                </div>
             </form>
         </div>
     )

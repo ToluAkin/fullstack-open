@@ -27,7 +27,7 @@ const App = () => {
         }
     ])
 
-    const addNew = (anecdote) => {
+    const addNew = anecdote => {
         anecdote.id = (Math.random() * 10000).toFixed(0)
         setAnecdotes(anecdotes.concat(anecdote))
         setNotification(`A new anecdote ${ anecdote.content } created!`)
@@ -44,11 +44,11 @@ const App = () => {
 
     return (
         <BrowserRouter>
-            <Switch>
-                <div>
-                    <h1>Software anecdotes</h1>
-                    <Menu />
-                    <strong>{ notification }</strong>
+            <div>
+                <h1>Software anecdotes</h1>
+                <Menu />
+                <strong>{ notification }</strong>
+                <Switch>
                     <Route exact path="/">
                         <AnecdoteList anecdotes={ anecdotes } />
                     </Route>
@@ -59,9 +59,9 @@ const App = () => {
                     <Route path="/anecdotes/:id">
                         <Anecdote anecdotes={ anecdotes } />
                     </Route>
-                    <Footer />
-                </div>
-            </Switch>
+                </Switch>
+                <Footer />
+            </div>
         </BrowserRouter>
     )
 }
