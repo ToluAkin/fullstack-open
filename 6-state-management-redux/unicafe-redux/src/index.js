@@ -18,8 +18,8 @@ const counterReducer = (state = initialState, action) => {
             return state
         case 'ZERO':
             return state
+        default: return state
     }
-    return state
 }
 export default counterReducer
 

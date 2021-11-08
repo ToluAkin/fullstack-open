@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 
 //Model import
 const Blog = require('../models/blog')
@@ -28,7 +29,7 @@ router.post('/',  async (req, res) => {
     const user = await User.findById(decodedToken.id)
     if (!blog.likes) blog.likes = 0
 
-    blog.user = user
+    blog.user = user.id
     const savedBlog = await blog.save()
 
     user.blogs = user.blogs.concat(savedBlog._id)

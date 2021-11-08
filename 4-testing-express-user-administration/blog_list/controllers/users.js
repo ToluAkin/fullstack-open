@@ -8,7 +8,13 @@ const User = require('../models/user')
 //Get request for all users
 router.get('/', async(req, res) => {
     const users = await User.find({}).populate('blogs', { title: 1, url: 1,  likes: 1, author: 1 })
-    res.json(users.map(user => user.toJSON()))
+    res.status(200).json(users.map(user => user.toJSON()))
+})
+
+// Get a single user's data
+router.get('/:id', async (req, res) => {
+    const user = await User.findById(req.params.id).populate('blogs', { title: 1, url: 1, likes: 1, author: 1 })
+    res.status(200).json(user.toJSON())
 })
 
 //post request to add users

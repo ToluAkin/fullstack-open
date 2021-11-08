@@ -1,5 +1,6 @@
 const initialState = ''
 let holdTime = []
+
 export const setNotification = (content, duration) => {
     return async dispatch => {
         dispatch({ type: 'SET_NOTIFY', payload: content })
