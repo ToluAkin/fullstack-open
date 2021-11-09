@@ -17,8 +17,17 @@ export const createBlog = newObject => {
 
 export const likeBlog = blog => {
     return async dispatch => {
-        const updatedBlog = { ...blog, likes: blog.likes += 1 }
+        const updatedBlog = blog?.user?.username
+            ? { ...blog, likes: blog.likes += 1, user: blog?.user?.id }
+            : { ...blog, likes: blog.likes += 1 }
         await blogService.update(updatedBlog, blog.id)
+        dispatch({ type:'LIKE_BLOG', data: updatedBlog })
+    }
+}
+
+export const addComment = blog => {
+    return async dispatch => {
+        const updatedBlog = await blogService.comment(blog, blog.id)
         dispatch({ type:'LIKE_BLOG', data: updatedBlog })
     }
 }

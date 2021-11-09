@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import helper from '../utils/blogListHelper'
+import { List, ListItem } from '@mui/material'
 
 const User = ({ users }) => {
     const userId =  useParams().id
@@ -14,14 +15,16 @@ const User = ({ users }) => {
     return (
         <div>
             <h1>{ user?.name }</h1>
-            <p>added blogs</p>
-            <ul>
+            <p>Added blogs</p>
+            <List>
                 {
                     user?.blogs.map((blog, i) => (
-                        <li key={i}><Link style={ helper.linkStyle } to={`/blogs/${ blog.id }`}>{ blog.title }</Link></li>
+                        <ListItem key={i}>
+                            <Link style={ helper.linkStyle } to={`/blogs/${ blog.id }`}>{ blog.title }</Link>
+                        </ListItem>
                     ))
                 }
-            </ul>
+            </List>
         </div>
     )
 }

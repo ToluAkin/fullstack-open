@@ -1,27 +1,23 @@
 import React from 'react'
 
 import Notification from '../components/Notification'
+import { Box, Button, Paper, TextField } from '@mui/material'
 
 const LoginForm = ({ handleLogin, handleNameChange, username, handlePasswordChange, password }) => {
 
     return (
-        <div>
+        <Paper sx={{ padding: 2 }}>
             <h1>Login to application</h1>
             <Notification />
-            <form onSubmit={ handleLogin }>
-                <div>
-                    Username:
-                    <input name="username" id="username" type="text" value={ username }
+            <Box component="form" onSubmit={ handleLogin } noValidate
+                 sx={{ display: 'flex', flexDirection: 'column', '& > :not(style)': { m: 1, width: '25ch' } }}>
+                    <TextField label="Username" id="username" type="text" value={ username }
                         onChange={ handleNameChange } />
-                </div>
-                <div>
-                    Password:
-                    <input name="password" id="pswd" type="password" value={ password }
+                    <TextField label="Password" id="pswd" type="password" value={ password }
                         onChange={ handlePasswordChange } />
-                </div>
-                <button id="loginButton" type="submit">login</button>
-            </form>
-        </div>
+                <Button variant='contained' type="submit">login</Button>
+            </Box>
+        </Paper>
     )
 }
 

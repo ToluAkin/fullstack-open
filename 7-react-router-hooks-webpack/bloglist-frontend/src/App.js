@@ -6,19 +6,22 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
+import Users from './components/Users'
+import User from './components/User'
+import BlogView from './components/BlogView'
 
 //services
 import blogService from './services/blogs'
 import loginService from './services/login'
+import usersService from './services/users'
 
 //reducers
 import { initializeBlogs } from './reducers/blogsReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { signedInUser, signOut } from './reducers/usersReducer'
-import Users from "./components/Users";
-import User from "./components/User";
-import usersService from "./services/users";
-import BlogView from "./components/BlogView";
+
+//style
+import { Box, Button, Container, Typography, Link } from '@mui/material'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -29,15 +32,15 @@ const App = () => {
 
     useEffect(() => { dispatch((initializeBlogs())) }, [dispatch])
     useEffect(() => {
+        //save logged in user's data
         const loggedInUser = window.localStorage.getItem('loggedUser')
         if (loggedInUser) {
             const user = JSON.parse(loggedInUser)
             dispatch(signedInUser(user))
             blogService.setToken(user.token)
         }
-    }, [])
 
-    useEffect(() => {
+        //get all user's view
         (async() => {
             const allUsers = await usersService.getAll()
             setUsers(allUsers)
@@ -79,11 +82,22 @@ const App = () => {
     } else {
         return (
             <BrowserRouter>
-                <section>
-                    <h2>Blogs</h2>
+                <Container sx={{ paddingTop: 5, paddingBottom: 10 }}>
+                    <Box>
+                        <h2>Blog App</h2>
+                        <Box sx={{ display: 'flex', alignItems: 'center', typography: 'body1', justifyContent: 'flex-end',
+                            '& > :not(style) + :not(style)': {
+                                mr: 2,
+                            }, }}>
+                            <Link href="/" underline="always" sx={{ mr: 2, color: 'black' }}>Blogs</Link>
+                            <Link href="/users" underline="always" sx={{ color: 'black' }}>Users</Link>
+                            <Typography>
+                                <strong>{ user.name }</strong> logged in
+                            </Typography>
+                            <Button variant='contained' onClick={ handleLogOut } type='submit'>logout</Button>
+                        </Box>
+                    </Box>
                     <Notification/>
-                    <p>{ user.name } logged in</p>
-                    <button type="submit" onClick={ handleLogOut }>logout</button>
                     <p/>
                     <Switch>
                         <Route exact path='/' component={ BlogList } />
@@ -94,10 +108,10 @@ const App = () => {
                             <Users users={ users } />
                         </Route>
                         <Route path='/blogs/:id'>
-                            <BlogView />
+                            <BlogView users={ users } />
                         </Route>
                     </Switch>
-                </section>
+                </Container>
             </BrowserRouter>
         )
     }

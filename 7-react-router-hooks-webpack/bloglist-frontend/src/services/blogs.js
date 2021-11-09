@@ -20,11 +20,16 @@ const update = async (newObject, blogId) => {
     return response.data
 }
 
+const comment = async (newObject, blogId) => {
+    const response = await axios.post(`${ baseUrl }/${ blogId }/comments`, newObject)
+    return response.data
+}
+
 const remove = async blogId => {
     const config = { headers: { Authorization: token } }
     const request = await axios.delete(`${ baseUrl }/${ blogId }`, config)
     return request.data
 }
 
-const query = { getAll, create, setToken, update, remove }
+const query = { getAll, create, setToken, update, remove, comment }
 export default query

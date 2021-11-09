@@ -37,6 +37,18 @@ router.post('/',  async (req, res) => {
     res.status(201).json(savedBlog)
 })
 
+//post request to create a comment on a blog
+router.post('/:id/comments', async (req, res) => {
+    const blog = await Blog.findById(req.params.id)
+
+    blog.comments
+        ? blog.comments = [...blog.comments, req.body.comments]
+        : blog.comments = [req.body.comments]
+    
+    const updatedBlog = await blog.save()
+    res.status(200).json(updatedBlog.toJSON())
+})
+
 // Remove a blog
 router.delete('/:id', async (req, res) => {
     const decodedToken = jwt.verify(req.token, process.env.SECRET)

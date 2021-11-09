@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 
 import Blog from './Blog'
 import AddBlog from './AddBlog'
+import { Grid } from '@mui/material'
 
 const BlogList = () => {
     const blogs = useSelector(state => state.blogs)
@@ -10,7 +11,9 @@ const BlogList = () => {
     return (
         <>
             <AddBlog />
-            { blogs.map(blog => <Blog key={ blog.id } blog={ blog } />) }
+            <Grid container spacing={2}>
+                { blogs.map(blog => ( <Blog key={ blog.id } blog={ blog }/> )) }
+            </Grid>
         </>
     )
 }
