@@ -1,5 +1,5 @@
 const { ApolloServer, gql } = require("apollo-server")
-const { v1: uuid } = require('uuid')
+const { v4: uuid } = require('uuid');
 
 let authors = [
     {
@@ -182,9 +182,16 @@ const resolvers = {
         editAuthor: (root, args) => {
             let authorData = authors.find(author => author.name === args.name)
             if (authorData) {
-                authorData = { ...authorData, born: args.setBornTo }
-                authors.map(author => author.name === args.name ? authorData : author)
-                return authorData
+                let newAuthorData
+                authors.map((author, index) => {
+                    if (author.name === args.name) {
+                        authors[index] = { ...authorData, born: args.setBornTo }
+                        return newAuthorData = authors[index]
+                    } else {
+                        return author
+                    }
+                })
+                return newAuthorData
             } else {
                 return null
             }
