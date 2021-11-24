@@ -1,14 +1,16 @@
-const { ApolloServer, UserInputError, gql } = require("apollo-server")
+const { ApolloServer, UserInputError, AuthenticationError, gql } = require("apollo-server")
 const mongoose = require("mongoose")
-const { v1: uuid } = require("uuid")
+const jwt = require("jsonwebtoken")
 
+// Models
 const Book = require('./models/Book')
 const Author = require('./models/Author')
-
+const User = require('./models/User')
+// Utils
 const config = require('./utils/config')
 
 console.log('connecting to', config.MONGODB_URI)
-
+// Database connection
 mongoose.connect(config.MONGODB_URI)
     .then(() => {
         console.log('connected to MongoDB')
@@ -16,7 +18,7 @@ mongoose.connect(config.MONGODB_URI)
     .catch((error) => {
         console.log('error connecting to MongoDB:', error.message)
     })
-
+// GraphQL Schema
 const typeDefs = gql`
     type Author {
         name: String!
@@ -32,6 +34,16 @@ const typeDefs = gql`
         id: ID!
     }
 
+    type User {
+        username: String!
+        favoriteGenre: String!
+        id: ID!
+    }
+
+    type Token {
+        value: String!
+    }
+
     type bookAuthor {
         title: String!
         author: Author!
@@ -45,19 +57,24 @@ const typeDefs = gql`
     type Query {
         bookCount: Int!
         authorCount: Int!
-        allBooks(author: String, genre: String): [Book]
+        allBooks(author: String genre: String): [Book]
         allAuthors: [Author!]!
+        me: User
     }
 
     type Mutation {
-        addBook(title: String!, author: String!, published: Int!, genres: [String!]!): bookAuthor
-        editAuthor(name: String!, setBornTo: Int!): authorPerson
+        addBook(title: String! author: String! published: Int! genres: [String!]!): bookAuthor
+        editAuthor(name: String! setBornTo: Int!): authorPerson
+        createUser(username: String! favoriteGenre: String!): User
+        login(username: String! password: String!): Token
     }
 `
+
 const resolvers = {
     Query: {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
+        me: (root, args, context) => { return context.currentLoggedInUser }, // accessing the logged in user from context
         allBooks: async(root, args) => {
             if (args.genre) { // if genre is provided as well as both genre and author to filter
                 const allTitles = []
@@ -67,14 +84,13 @@ const resolvers = {
                         : book.genres.filter(genre => genre === args.genre))
                 filteredBooks.map(theBook => allTitles.push({ title: theBook.title, author: theBook.author}))
                 return allTitles
-            } else if (args.author) { // if just author is provided
+            } else if (args.author) { // if just author is provided, all the author's book titles are returned
                 const author = await Author.findOne({ name: args.author.toLowerCase() })
                 if (author) {
-                    const books = await Book.find({ author: author.id }).populate('author', { name: 1, born: 1 })
-                    books.map(book => book.author.bookCount = books.length)
-                    return books
-                } else {
-                    return null
+                    let allTitles = []
+                    const books = await Book.find({ author: author.id })
+                    books.map(book => allTitles.push({ title: book.title }))
+                    return allTitles
                 }
             } else {
                 const allBooks = await Book.find({}).populate('author', { name: 1, born: 1 })
@@ -89,7 +105,12 @@ const resolvers = {
     },
 
     Mutation: {
-        addBook: async (root, args) => {
+        addBook: async (root, args, context) => {
+            const loggedInUser = context.currentLoggedInUser
+            if (!loggedInUser) {
+                return new AuthenticationError('not authenticated')
+            }
+
             let bookAuthor
             let existingAuthor = await Author.findOne({ name: args.author.toLowerCase() })
 
@@ -122,7 +143,12 @@ const resolvers = {
             return bookAuthor
         },
         
-        editAuthor: async (root, args) => {
+        editAuthor: async (root, args, context) => { // edit a author's DOB
+            const loggedInUser = context.currentLoggedInUser
+            if (!loggedInUser) {
+                return new AuthenticationError('not authenticated')
+            }
+
             let author = await Author.findOne({ name: args.name.toLowerCase() })
             if (author) {
                 let newAuthorData
@@ -138,12 +164,40 @@ const resolvers = {
             } else {
                 return null
             }
+        },
+
+        createUser: async (root, args) => {
+            const { username, favoriteGenre } = args
+            const user = new User({ username, password: 'secret', favoriteGenre })
+            return await user.save()
+                .catch(error => {
+                    throw new UserInputError(error.message, { invalidArgs: args })
+                })
+        },
+
+        login: async (root, args) => {
+            const { username, password } = args
+            const user = await User.findOne({ username, password })
+
+            if (!user || password !== 'secret') throw new UserInputError("wrong credentials")
+            
+            const userForToken = { username: user.username, id: user.id }
+            return { value: jwt.sign(userForToken, config.JWT_SECRET) }
         }
     }
 }
 
-const server = new ApolloServer({ typeDefs, resolvers, })
+const server = new ApolloServer({
+    typeDefs, resolvers, context: async ({ req }) => { // Context is the right place to do things which are shared by multiple resolvers
+        const auth = req ? req.headers.authorization : null
+        if (auth && auth.toLowerCase().startsWith('bearer ')) {
+            const decodedToken = jwt.verify(auth.substring(7), config.JWT_SECRET)
+            const currentLoggedInUser = await User.findById(decodedToken.id)
+            return { currentLoggedInUser }
+        }
+    }
+})
 
 server.listen().then(({ url }) => {
-    console.log(`Server ready at ${url}`)
+    console.log(`Server ready at ${ url }`)
 })
