@@ -154,7 +154,7 @@ const resolvers = {
 				return { ...book, born: bookAuthors?.born }
 			})
 			const authorCount = []
-			booksAndAuthors.map((book) => { // use merged array to count the author's books
+			booksAndAuthors.map(book => { // use merged array to count the author's books
 				const existingAuthor = authorCount.find(author => book.author === author.name)
 				if (existingAuthor) {
 					existingAuthor.bookCount += 1

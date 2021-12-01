@@ -13,7 +13,7 @@ console.log('connecting to', config.MONGODB_URI)
 // Database connection
 mongoose.connect(config.MONGODB_URI)
     .then(() => {
-        console.log('connected to MongoDB')
+        console.log('connected to MongoDB 🚀 🚀')
     })
     .catch((error) => {
         console.log('error connecting to MongoDB:', error.message)
@@ -60,6 +60,7 @@ const typeDefs = gql`
         allBooks(author: String genre: String): [Book]
         allAuthors: [Author!]!
         me: User
+        allGenre: [String]!
     }
 
     type Mutation {
@@ -75,15 +76,10 @@ const resolvers = {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
         me: (root, args, context) => { return context.currentLoggedInUser }, // accessing the logged in user from context
-        allBooks: async(root, args) => {
+        allBooks: async (root, args) => {
             if (args.genre) { // if genre is provided as well as both genre and author to filter
-                const allTitles = []
-                const filteredBooks = books.filter(book =>
-                    args.author
-                        ? book.genres.filter(genre => genre === args.genre) && book.author === args.author
-                        : book.genres.filter(genre => genre === args.genre))
-                filteredBooks.map(theBook => allTitles.push({ title: theBook.title, author: theBook.author}))
-                return allTitles
+                const booksGenre = await Book.find({ genres: args.genre }).populate('author', { name: 1, born: 1 })
+                return booksGenre
             } else if (args.author) { // if just author is provided, all the author's book titles are returned
                 const author = await Author.findOne({ name: args.author.toLowerCase() })
                 if (author) {
@@ -100,7 +96,22 @@ const resolvers = {
         
         allAuthors: async () => {
             const allAuthors = await Author.find({})
-            return allAuthors
+            const allBooks = await Book.find({})
+            const authorCount = []
+            allAuthors.map(author => authorCount.push({ name: author.name, id: author.id, born: author.born }))
+            allBooks.map(book =>
+                authorCount.filter((author, i) =>
+                    author.id == book.author
+                        ? authorCount[i].bookCount += 1
+                        : authorCount[i].bookCount = 1)
+            )
+    
+            return authorCount
+        },
+
+        allGenre: async () => {
+            const genres = await Book.distinct('genres')
+            return genres
         }
     },
 
@@ -187,6 +198,7 @@ const resolvers = {
     }
 }
 
+// setting up a new GraphQL server
 const server = new ApolloServer({
     typeDefs, resolvers, context: async ({ req }) => { // Context is the right place to do things which are shared by multiple resolvers
         const auth = req ? req.headers.authorization : null
@@ -199,5 +211,5 @@ const server = new ApolloServer({
 })
 
 server.listen().then(({ url }) => {
-    console.log(`Server ready at ${ url }`)
+    console.log(`🚀 Server ready at ${ url }`)
 })
