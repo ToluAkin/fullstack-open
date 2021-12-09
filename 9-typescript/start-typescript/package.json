@@ -1,0 +1,30 @@
+{
+  "name": "start-typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ts-node": "ts-node",
+    "bmiCalculator": "ts-node -- bmiCalculator.ts",
+    "calculateExercises": "ts-node -- exerciseCalculator.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ToluAkin/fullstack-open.git"
+  },
+  "keywords": [
+    "typescript",
+    "javascript",
+    "nodejs"
+  ],
+  "author": "Toluwalase Akintoye",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ToluAkin/fullstack-open/issues"
+  },
+  "homepage": "https://github.com/ToluAkin/fullstack-open#readme",
+  "devDependencies": {
+    "@types/node": "^16.11.12",
+    "tslib": "^2.3.1"
+  }
+}
